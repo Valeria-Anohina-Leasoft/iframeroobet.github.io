@@ -319,21 +319,6 @@
       <button onclick="loadGame()">Load Game</button>
     </div>
 
-    <div class="controls">
-      <button id="desktopBtn" class="active" onclick="switchView('desktop')">Desktop</button>
-      <button id="mobileBtn" onclick="switchView('mobile')">Mobile Portrait</button>
-      <button id="landscapeBtn" onclick="switchView('landscape')">Mobile Landscape</button>
-
-      <select id="deviceSelect" onchange="changeDevice()">
-        <option value="375x667">iPhone SE / 375×667</option>
-        <option value="390x844" selected>iPhone 12/13/14 / 390×844</option>
-        <option value="393x852">iPhone 15 / 393×852</option>
-        <option value="430x932">iPhone Pro Max / 430×932</option>
-        <option value="360x740">Android Small / 360×740</option>
-        <option value="412x915">Pixel / Galaxy / 412×915</option>
-        <option value="768x1024">iPad / 768×1024</option>
-      </select>
-    </div>
   </section>
 
   <!-- DESKTOP VIEW -->
@@ -375,91 +360,9 @@
     </div>
   </section>
 
-  <!-- MOBILE PORTRAIT VIEW -->
-  <section id="mobileView" class="view">
-    <div class="mobile-stage">
-      <div id="phonePortrait" class="phone portrait">
-        <header class="mobile-header">
-          <div class="mobile-logo"></div>
-          <div class="mobile-actions">
-            <button>Login</button>
-            <button class="register">Register</button>
-          </div>
-        </header>
-
-        <main class="mobile-game-wrap">
-          <div class="mobile-frame">
-            <iframe
-              id="mobileFrame"
-              allowfullscreen
-              allow="fullscreen; autoplay; clipboard-read; clipboard-write"
-            ></iframe>
-          </div>
-        </main>
-
-        <nav class="mobile-nav">
-          <div>☰<br />MENU</div>
-          <div>⌕<br />SEARCH</div>
-          <div>🎰<br />CASINO</div>
-          <div>⚽<br />SPORTS</div>
-          <div>💬<br />CHAT</div>
-        </nav>
-
-        <div class="info">Scroll page to check bottom part of the game.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MOBILE LANDSCAPE VIEW -->
-  <section id="landscapeView" class="view">
-    <div class="mobile-stage">
-      <div id="phoneLandscape" class="phone landscape">
-        <header class="mobile-header">
-          <div class="mobile-logo"></div>
-          <div class="mobile-actions">
-            <button>Login</button>
-            <button class="register">Register</button>
-          </div>
-        </header>
-
-        <main class="mobile-game-wrap">
-          <div class="mobile-landscape-frame">
-            <iframe
-              id="landscapeFrame"
-              allowfullscreen
-              allow="fullscreen; autoplay; clipboard-read; clipboard-write"
-            ></iframe>
-          </div>
-        </main>
-
-        <nav class="mobile-nav">
-          <div>☰<br />MENU</div>
-          <div>⌕<br />SEARCH</div>
-          <div>🎰<br />CASINO</div>
-          <div>⚽<br />SPORTS</div>
-          <div>💬<br />CHAT</div>
-        </nav>
-
-        <div class="info">Landscape mode simulation.</div>
-      </div>
-    </div>
-  </section>
 
   <script>
     const desktopFrame = document.getElementById("desktopFrame");
-    const mobileFrame = document.getElementById("mobileFrame");
-    const landscapeFrame = document.getElementById("landscapeFrame");
-
-    const desktopView = document.getElementById("desktopView");
-    const mobileView = document.getElementById("mobileView");
-    const landscapeView = document.getElementById("landscapeView");
-
-    const desktopBtn = document.getElementById("desktopBtn");
-    const mobileBtn = document.getElementById("mobileBtn");
-    const landscapeBtn = document.getElementById("landscapeBtn");
-
-    const phonePortrait = document.getElementById("phonePortrait");
-    const phoneLandscape = document.getElementById("phoneLandscape");
 
     function loadGame() {
       const url = document.getElementById("gameUrl").value.trim();
@@ -470,49 +373,7 @@
       }
 
       desktopFrame.src = url;
-      mobileFrame.src = url;
-      landscapeFrame.src = url;
     }
-
-    function switchView(view) {
-      desktopView.classList.remove("active");
-      mobileView.classList.remove("active");
-      landscapeView.classList.remove("active");
-
-      desktopBtn.classList.remove("active");
-      mobileBtn.classList.remove("active");
-      landscapeBtn.classList.remove("active");
-
-      if (view === "desktop") {
-        desktopView.classList.add("active");
-        desktopBtn.classList.add("active");
-      }
-
-      if (view === "mobile") {
-        mobileView.classList.add("active");
-        mobileBtn.classList.add("active");
-      }
-
-      if (view === "landscape") {
-        landscapeView.classList.add("active");
-        landscapeBtn.classList.add("active");
-      }
-
-      window.scrollTo(0, 0);
-    }
-
-    function changeDevice() {
-      const value = document.getElementById("deviceSelect").value;
-      const [width, height] = value.split("x");
-
-      phonePortrait.style.setProperty("--device-width", width + "px");
-      phonePortrait.style.setProperty("--device-height", height + "px");
-
-      phoneLandscape.style.setProperty("--device-width", width + "px");
-      phoneLandscape.style.setProperty("--device-height", height + "px");
-    }
-
-    changeDevice();
   </script>
 </body>
 </html>
