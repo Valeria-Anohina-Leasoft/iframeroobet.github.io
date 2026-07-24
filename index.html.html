@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Roobet Iframe Slot Simulator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #08091f;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body {
+      padding-bottom: 40px;
+    }
+
+    .tool-panel {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: #1a1638;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-bottom: 1px solid #312a63;
+    }
+
+    .url-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .url-row input {
+      flex: 1;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #7a64d8;
+      background: #0e1028;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .url-row button {
+      padding: 0 24px;
+      border: none;
+      border-radius: 10px;
+      background: #ffb700;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .controls button,
+    .controls select {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: #2b2558;
+      color: #ffffff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .controls button.active {
+      background: #ffb700;
+      color: #ffffff;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* DESKTOP ROOBET */
+
+    .desktop-roobet {
+      min-height: 100vh;
+      background: #080b1d;
+    }
+
+    .desktop-header {
+      height: 70px;
+      background: #171534;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .desktop-logo {
+      color: #ffbd18;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 8px;
+    }
+
+    .desktop-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .desktop-actions button {
+      height: 38px;
+      border: none;
+      border-radius: 12px;
+      padding: 0 16px;
+      background: #29234f;
+      color: white;
+      font-weight: bold;
+    }
+
+    .desktop-actions .register {
+      background: #ffb700;
+    }
+
+    .desktop-layout {
+      display: flex;
+    }
+
+    .desktop-sidebar {
+      width: 215px;
+      background: #171534;
+      padding: 12px;
+      min-height: calc(100vh - 70px);
+    }
+
+    .side-item {
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 9px;
+      background: #312b5d;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .desktop-game-area {
+      flex: 1;
+      padding: 10px 56px 40px;
+    }
+
+    .desktop-frame {
+      width: 100%;
+      height: calc(100vh - 120px);
+      min-height: 620px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #050714;
+    }
+
+    /* MOBILE ROOBET */
+
+    .mobile-stage {
+      width: 100%;
+      overflow-x: auto;
+      padding: 24px 0 60px;
+    }
+
+    .phone {
+      margin: 0 auto;
+      background: #171534;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px #2b2558;
+    }
+
+    .phone.portrait {
+      width: var(--device-width);
+      min-height: var(--device-height);
+    }
+
+    .phone.landscape {
+      width: var(--device-height);
+      min-height: var(--device-width);
+    }
+
+    .mobile-header {
+      height: 72px;
+      background: #171534;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .mobile-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 3px solid #ffbd18;
+    }
+
+    .mobile-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .mobile-actions button {
+      height: 44px;
+      border: none;
+      border-radius: 16px;
+      padding: 0 20px;
+      background: #2c2558;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .mobile-actions .register {
+      background: #ffb700;
+    }
+
+    .mobile-game-wrap {
+      background: #080b1d;
+      padding: 0 16px;
+    }
+
+    .mobile-frame {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #050714;
+    }
+
+    .mobile-landscape-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #050714;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #000;
+    }
+
+    .mobile-nav {
+      height: 60px;
+      background: #171534;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .mobile-nav div {
+      text-align: center;
+    }
+
+    .info {
+      padding: 14px 18px;
+      font-size: 13px;
+      color: #bdb6f1;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .url-row {
+        flex-direction: column;
+      }
+
+      .url-row button {
+        height: 48px;
+      }
+
+      .desktop-sidebar {
+        display: none;
+      }
+
+      .desktop-game-area {
+        padding: 10px 16px 40px;
+      }
+
+      .desktop-frame {
+        height: 70vh;
+        min-height: 500px;
+      }
+    }
+
+    /* MOBILE LANDSCAPE VIA DEVTOOLS */
+    @media (orientation: landscape) and (max-height: 600px) {
+      body {
+        padding-bottom: 0;
+      }
+
+      .tool-panel {
+        position: relative;
+        padding: 8px;
+      }
+
+      .url-row {
+        flex-direction: row;
+      }
+
+      .url-row input {
+        min-width: 0;
+        padding: 10px;
+      }
+
+      .url-row button {
+        width: auto;
+        height: 40px;
+        padding: 0 18px;
+      }
+
+      .desktop-header {
+        height: 56px;
+        padding: 0 16px;
+      }
+
+      .desktop-logo {
+        font-size: 18px;
+        letter-spacing: 5px;
+      }
+
+      .desktop-actions {
+        gap: 8px;
+      }
+
+      .desktop-actions button {
+        height: 36px;
+        padding: 0 12px;
+      }
+
+      .desktop-sidebar {
+        display: none;
+      }
+
+      .desktop-layout {
+        display: block;
+      }
+
+      .desktop-game-area {
+        padding: 8px 12px 20px;
+      }
+
+      .desktop-frame {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+        border-radius: 10px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <section class="tool-panel">
+    <div class="url-row">
+      <input
+        id="gameUrl"
+        type="text"
+        placeholder="Paste game launch URL here..."
+      />
+      <button onclick="loadGame()">Load Game</button>
+    </div>
+
+  </section>
+
+  <!-- DESKTOP VIEW -->
+  <section id="desktopView" class="view active">
+    <div class="desktop-roobet">
+      <header class="desktop-header">
+        <div class="desktop-logo">ROOBET</div>
+        <div class="desktop-actions">
+          <button>⌕</button>
+          <button>Login</button>
+          <button class="register">Register</button>
+          <button>☰</button>
+        </div>
+      </header>
+
+      <main class="desktop-layout">
+        <aside class="desktop-sidebar">
+          <div class="side-item">🎰 Casino</div>
+          <div class="side-item">Roobet Games</div>
+          <div class="side-item">Popular</div>
+          <div class="side-item">New Games</div>
+          <div class="side-item">Slots</div>
+          <div class="side-item">Bonus Buys</div>
+          <div class="side-item">Live Casino</div>
+          <div class="side-item">Sportsbook</div>
+          <div class="side-item">Promotions</div>
+        </aside>
+
+        <section class="desktop-game-area">
+          <div class="desktop-frame">
+            <iframe
+              id="desktopFrame"
+              allowfullscreen
+              allow="fullscreen; autoplay; clipboard-read; clipboard-write"
+            ></iframe>
+          </div>
+        </section>
+      </main>
+    </div>
+  </section>
+
+
+  <script>
+    const desktopFrame = document.getElementById("desktopFrame");
+
+    function loadGame() {
+      const url = document.getElementById("gameUrl").value.trim();
+
+      if (!url) {
+        alert("Please paste game launch URL first");
+        return;
+      }
+
+      desktopFrame.src = url;
+    }
+  </script>
+</body>
+</html>
